@@ -21,13 +21,15 @@ import bodyParser from 'body-parser'; import messageRoutes from "./routes/messag
 app.use(bodyParser.json({ limit: '10mb' })); // Adjust the limit as necessary
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 5001;
 const __dirname = path.resolve();
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: process.env.NODE_ENV === "production" 
+        ? "https://ryder-h9lf.onrender.com" // Your actual Render URL
+        : "http://localhost:5173",
     credentials: true
 }));
 
@@ -43,7 +45,7 @@ if(process.env.NODE_ENV === "production"){
     })
 }
 
-server.listen(PORT, () => {
+server.listen(PORT, "0.0.0.0", () => {
     console.log("Server is running on port: " + PORT);
     connectDB();
 });
